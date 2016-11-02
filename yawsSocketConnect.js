@@ -26,18 +26,21 @@ yaws.socketConnect = function (url, onMessage, options) {
          * @returns {number}
          */
         var getValue = function (options, key) {
+            var canUseProperty = function(object, property) {
+                return object && typeof object === 'object' && property && object[property] && typeof object[property] === 'number';
+            };
             var defaults = {
                 timeout: 5000,
                 maxInterval: 60000
             };
-            if (!options || typeof options !== 'object' || !options[key] || typeof options[key] !== 'number') {
+            if (!canUseProperty(options, key)) {
                 if (key in defaults) {
                     return defaults[key];
                 }
                 throw "No default defined for " + key + ".";
             }
-            if (parseInt(options[key]) !== options[key]) {
-                return parseInt(options[key] * 1000);
+            if (parseInt(options[key], 10) !== options[key]) {
+                return parseInt(options[key] * 1000, 10);
             }
             return options[key];
         };
