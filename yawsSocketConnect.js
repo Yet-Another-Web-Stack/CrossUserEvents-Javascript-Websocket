@@ -1,60 +1,123 @@
-if(!("yaws" in window)){
-	var yaws={};
+if (!("yaws" in window)) {
+    var yaws = {};
 }
-yaws.socketConnect=function(url,onMessage,options) {
-	var get=function(url,options) {
-		if(!("Websocket" in window)) {
-			throw "No Websocket Implementation found";
-		}
-		//uses https://github.com/appuri/robust-websocket if avaible
-		if("RobustWebSocket" in window) {
-			var ws = new RobustWebSocket(url,[],{
-				timeout: options.timeout?options.timeout:5000,
-				shouldReconnect: function(event, ws) {
-					if(event.code===1008||event.code===1011) {
-						return null;
-					}
-				  	return Math.min(Math.pow(1.05, (ws.attempts+2)*ws.attempts/2) * 500,ws.maxInterval);
-				}
-			});
-			ws.maxInterval = options.maxInterval?options.maxInterval:60000;
-			return ws;
-		}
-		//uses https://github.com/joewalnes/reconnecting-websocket if avaible
-		if("ReconnectingWebSocket" in window) {
-			return new ReconnectingWebSocket(url,[],{
-				maxReconnectInterval: options.maxInterval?options.maxInterval:60000,
-				reconnectDecay: 2.5,
-				timeoutInterval: options.timeout?options.timeout:5000
-			});
-		}
-		//default websocket
-		return new Websocket(url,[]);
-	}
-	if(typeof onMessage!=="function") {
-		throw "The second parameter onMessage is required to be a function accepting a single parameter of type Blob.";
-	}
-	var Socket = get(url,options?options:{});
-	Socket.onMessageHandler = onMessage;
-	Socket.onmessage=function(event){
-		 if(typeof event.data === "string") {
-				throw "Got a string from the socket, expected binary data.";
-		} else if(event.data instanceof ArrayBuffer) {
-				if(!("FileReader" in window)) {
-					console.log("Got an ArrayBuffer, required a Blob. No Method to convert it found.");
-				}
-				console.log("Got an ArrayBuffer, trying to convert to blob.");
-				var reader = new FileReader();
-				reader.onLoadHandler=event.target.onMessageHandler;
-				reader.onload=function(event) {
-					event.target.onLoadHandler.call(event.target.result);
-				}
-				reader.readAsArrayBuffer(event.data);
-		} else if(event.data instanceof Blob) {
-				event.target.onMessageHandler.call(event.data);
-		} else {
-				throw "Got something that shouldn't exist from the socket: "+(typeof event.data)+".";
-		}
-	};
-	return Socket;
-}
+/**
+ * 
+ * @param {string} url
+ * @param {function} onMessage
+ * @param {object} options
+ * @returns {Websocket}
+ */
+yaws.socketConnect = function (url, onMessage, options) {
+    /**
+     * 
+     * @param {string} url
+     * @param {object} options
+     * @returns {Websocket}
+     */
+    var getSocket = function (url, options) {
+        if (!("Websocket" in window)) {
+            throw "No Websocket Implementation found";
+        }
+        /**
+         * 
+         * @param {object} options
+         * @param {string} key
+         * @returns {number}
+         */
+        var getValue = function (options, key) {
+            var defaults = {
+                timeout: 5000,
+                maxInterval: 60000
+            };
+            if (!options || typeof options !== 'object' || !options[key] || typeof options[key] !== 'number') {
+                if (key in defaults) {
+                    return defaults[key];
+                }
+                throw "No default defined for " + key + ".";
+            }
+            if (parseInt(options[key]) !== options[key]) {
+                return parseInt(options[key] * 1000);
+            }
+            return options[key];
+        };
+        //uses https://github.com/appuri/robust-websocket if avaible
+        if ("RobustWebSocket" in window) {
+            var ws = new RobustWebSocket(url, [], {
+                timeout: getValue(options, "timeout"),
+                shouldReconnect: function (event, ws) {
+                    if (event.code === 1008 || event.code === 1011) {
+                        return null;
+                    }
+                    return Math.min(Math.pow(1.05, (ws.attempts + 2) * ws.attempts / 2) * 500, ws.maxInterval);
+                }
+            });
+            ws.maxInterval = getValue(options, "maxInterval");
+            return ws;
+        }
+        //uses https://github.com/joewalnes/reconnecting-websocket if avaible
+        if ("ReconnectingWebSocket" in window) {
+            return new ReconnectingWebSocket(url, [], {
+                maxReconnectInterval: getValue(options, "maxInterval"),
+                reconnectDecay: 2.5,
+                timeoutInterval: getValue(options, "timeout")
+            });
+        }
+        //default websocket
+        return new Websocket(url, []);
+    };
+    /**
+     * 
+     * @returns {Function}
+     */
+    var getOnMessage = function () {
+        if ("FileReader" in window) {
+            /**
+             * 
+             * @param {Event} event
+             * @returns {undefined}
+             */
+            return function (event) {
+                if (typeof event.data !== 'object') {
+                    throw "Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.";
+                }
+                if (event.data instanceof Blob) {
+                    event.target.onMessageHandler(event.data);
+                    return;
+                }
+                if (event.data instanceof ArrayBuffer) {
+                    var reader = new FileReader();
+                    reader.onLoadHandler = event.target.onMessageHandler;
+                    reader.onload = function (event) {
+                        event.target.onLoadHandler(event.target.result);
+                    };
+                    reader.readAsArrayBuffer(event.data);
+                    return;
+                }
+                throw "Got an object of a type that shouldn't be returned by the socket.";
+            };
+        }
+        /**
+         * 
+         * @param {Event} event
+         * @returns {undefined}
+         */
+        return function (event) {
+            if (typeof event.data !== 'object') {
+                throw "Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.";
+            }
+            if (event.data instanceof Blob) {
+                event.target.onMessageHandler(event.data);
+                return;
+            }
+            throw "Got an object of a type that shouldn't be returned by the socket.";
+        };
+    };
+    if (typeof onMessage !== "function") {
+        throw "The second parameter onMessage is required to be a function accepting a single parameter of type Blob.";
+    }
+    var Socket = getSocket(url, options);
+    Socket.onMessageHandler = onMessage;
+    Socket.onmessage = getOnMessage();
+    return Socket;
+};
