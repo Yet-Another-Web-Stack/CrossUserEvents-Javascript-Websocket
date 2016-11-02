@@ -112,7 +112,7 @@
              * @returns {undefined}
              */
             return function (event) {
-                if (typeof event.data !== 'object') {
+                if (typeof event.data !== "object") {
                     throw "Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.";
                 }
                 if (event.data instanceof Blob) {
