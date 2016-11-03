@@ -52,6 +52,7 @@
             };
             //uses https://github.com/appuri/robust-websocket if avaible
             if ("RobustWebSocket" in window) {
+                /*global RobustWebSocket*/
                 var ws = new RobustWebSocket(url, [], {
                     timeout: getValue(options, "timeout"),
                     shouldReconnect: function (event, ws) {
@@ -66,6 +67,7 @@
             }
             //uses https://github.com/joewalnes/reconnecting-websocket if avaible
             if ("ReconnectingWebSocket" in window) {
+                /*global ReconnectingWebSocket*/
                 return new ReconnectingWebSocket(url, [], {
                     maxReconnectInterval: getValue(options, "maxInterval"),
                     reconnectDecay: 2.5,
