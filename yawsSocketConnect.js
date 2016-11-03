@@ -76,7 +76,7 @@
                     location.domain = location.path.replace(/\/.*/,"").replace(/:.*/,"");
                     location.path = location.path.replace(/^.*?(\/|$)/,"$1");
                     return location;
-                }
+                };
                 if(!url || typeof url !== "string") {
                     url = "{protocol}://{domain}{path}";
                 }
@@ -105,6 +105,7 @@
                     timeoutInterval: getValue(options, "timeout")
                 });
             }
+            /*global Websocket*/
             return new Websocket(getUrl(url), []);
         };
         /**
