@@ -9,16 +9,16 @@
     }
     /**
      * 
-     * @param {string} url
      * @param {function} onMessage
-     * @param {object} options
+     * @param {object} options optional
+     * @param {string} url optional
      * @returns {Websocket}
      */
-    window.yaws.socketConnect = function (url, onMessage, options) {
+    window.yaws.socketConnect = function (onMessage, options, url) {
         /**
          * returns the Websocket that provides the best reliability of the avaible ones
-         * @param {string} url
-         * @param {object} options
+         * @param {string} url optional
+         * @param {object} options optional
          * @returns {Websocket}
          */
         var getSocket = function (url, options) {
@@ -27,8 +27,8 @@
             }
             /**
              * returns the value given or a default if that doesn't exist
-             * @param {object} options
-             * @param {string} key
+             * @param {object} options optional
+             * @param {string} key optional
              * @returns {number}
              */
             var getValue = function (options, key) {
@@ -50,10 +50,42 @@
                 }
                 return options[key];
             };
-            //uses https://github.com/appuri/robust-websocket if avaible
+            /**
+             * returns an url to connect to. If one is supplied replaces placeholders for path and protocol
+             * @param {string} url optional
+             * @returns {string}
+             */
+            var getUrl = function(url) {
+                /**
+                 * returns basic location information as a object containing protocol, path and domain
+                 * @returns {object}
+                 **/
+                var getLocation = function() {
+                    if("protocol" in window.location && "path" in window.location && "domainname" in window.location) {
+                        return {
+                            protocol: "ws"+(window.location.protocol === "https"?"s":""),
+                            domain: window.location.domainname,
+                            path: window.location.path
+                        };
+                    }
+                    var location={
+                        protocol: "ws"+(window.location.href.match(/^https:\/\//i)?"s":""),
+                        path: window.location.href.replace(/^https?:\/\/(.*?)(\?.*?)?(#.*?)?/i,"$1"),
+                        domain: ""
+                    };
+                    location.domain = location.path.replace(/\/.*/,"").replace(/:.*/,"");
+                    location.path = location.path.replace(/^.*?(\/|$)/,"$1");
+                    return location;
+                }
+                if(!url || typeof url !== "string") {
+                    url = "{protocol}://{domain}{path}";
+                }
+                var location = getLocation();
+                return url.replace("{protocol}",location.protocol).replace("{path}",location.path).replace("{domain}",location.domain);
+            };
             if ("RobustWebSocket" in window) {
                 /*global RobustWebSocket*/
-                var ws = new RobustWebSocket(url, [], {
+                var ws = new RobustWebSocket(getUrl(url), [], {
                     timeout: getValue(options, "timeout"),
                     shouldReconnect: function (event, ws) {
                         if (event.code === 1008 || event.code === 1011) {
@@ -65,17 +97,15 @@
                 ws.maxInterval = getValue(options, "maxInterval");
                 return ws;
             }
-            //uses https://github.com/joewalnes/reconnecting-websocket if avaible
             if ("ReconnectingWebSocket" in window) {
                 /*global ReconnectingWebSocket*/
-                return new ReconnectingWebSocket(url, [], {
+                return new ReconnectingWebSocket(getUrl(url), [], {
                     maxReconnectInterval: getValue(options, "maxInterval"),
                     reconnectDecay: 2.5,
                     timeoutInterval: getValue(options, "timeout")
                 });
             }
-            //default websocket
-            return new Websocket(url, []);
+            return new Websocket(getUrl(url), []);
         };
         /**
          * returns a function handling the binary data returned by the socket
