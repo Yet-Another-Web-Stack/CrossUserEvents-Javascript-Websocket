@@ -1,4 +1,5 @@
 var should = require('chai').should();
+var expect = require('chai').expect;
 require('fake-dom');
 describe('yaws.socketConnect', function() {
   window=window?window:{};
