@@ -23,7 +23,7 @@
          */
         var getSocket = function (url, options) {
             if (!("Websocket" in window)) {
-                throw "No Websocket Implementation found";
+                throw new Error("No Websocket Implementation found");
             }
             /**
              * returns the value given or a default if that doesn't exist
@@ -43,7 +43,7 @@
                     if (key in defaults) {
                         return defaults[key];
                     }
-                    throw "No default defined for " + key + ".";
+                    throw new Error("No default defined for " + key + ".");
                 }
                 if (parseInt(options[key], 10) !== options[key]) {
                     return parseInt(options[key] * 1000, 10);
@@ -121,7 +121,7 @@
                  */
                 return function (event) {
                     if (typeof event.data !== "object") {
-                        throw "Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.";
+                        throw new Error("Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.");
                     }
                     if (event.data instanceof Blob) {
                         event.target.onMessageHandler(event.data);
@@ -136,7 +136,7 @@
                         reader.readAsArrayBuffer(event.data);
                         return;
                     }
-                    throw "Got an object of a type that shouldn't be returned by the socket.";
+                    throw new Error("Got an object of a type that shouldn't be returned by the socket.");
                 };
             }
             /**
@@ -146,17 +146,17 @@
              */
             return function (event) {
                 if (typeof event.data !== "object") {
-                    throw "Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.";
+                    throw new Error("Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.");
                 }
                 if (event.data instanceof Blob) {
                     event.target.onMessageHandler(event.data);
                     return;
                 }
-                throw "Got an object of a type that shouldn't be returned by the socket.";
+                throw new Error("Got an object of a type that shouldn't be returned by the socket.");
             };
         };
         if (typeof onMessage !== "function") {
-            throw "The first parameter 'onMessage' is required to be a function accepting a single parameter of type Blob.";
+            throw new Error("The first parameter 'onMessage' is required to be a function accepting a single parameter of type Blob.");
         }
         var Socket = getSocket(url, options);
         Socket.onMessageHandler = onMessage;
