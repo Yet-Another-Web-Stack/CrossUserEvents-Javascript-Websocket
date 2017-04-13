@@ -89,6 +89,11 @@
                             return null;
                         }
                         var calculated = Math.pow(1.05, (ws.attempts + 2) * ws.attempts / 2) * 500;
+                        console.log(calculated);
+                        console.log(Number.isNaN(calculated));
+                        console.log(calculated === Infinity);
+                        console.log(calculated < ws.maxInterval);
+                        console.log(ws.maxInterval);
                         if(Number.isNaN(calculated) || calculated === Infinity) {
                             return ws.maxInterval;
                         }
