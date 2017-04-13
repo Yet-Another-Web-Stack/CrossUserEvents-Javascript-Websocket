@@ -82,7 +82,7 @@ describe('yaws', function() {
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o object given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(function{socket.onmessage({data:"-",target:socket})}).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
+            expect(function(){socket.onmessage({data:"-",target:socket})}).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o Blob given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
