@@ -1,28 +1,30 @@
 var should = require('chai').should();
 var expect = require('chai').expect;
 require('fake-dom');
-  window = {
-    setLocation: function(full) {
-      window.location={href: "https://127.0.0.1/example"};
-      if(full) {
-        window.location={
-            href: "https://127.0.0.1/example",
-            protocol: "http",
-            path: "/ex",
-            domainname: "localhost"
-        };
-      }
-    },
-    getSocketMock: function(name) {
-      window[name] = function(url){
-        this.url=url;
-        return this;
+//setup start
+window = {
+  setLocation: function(full) {
+    window.location={href: "https://127.0.0.1/example"};
+    if(full) {
+      window.location={
+        href: "https://127.0.0.1/example",
+        protocol: "http",
+        path: "/ex",
+        domainname: "localhost"
       };
-      return window[name];
     }
-  };
-  window.setLocation(true);
-  require('../src/yawsSocketConnect.js');
+  },
+  getSocketMock: function(name) {
+    window[name] = function(url){
+      this.url=url;
+      return this;
+    };
+    return window[name];
+  }
+};
+window.setLocation(true);
+require('../src/yawsSocketConnect.js');
+//setup end
 describe('yaws', function() {
   it('yaws should be an object', function() {
     window.yaws.should.be.a('object');
@@ -62,36 +64,26 @@ describe('yaws', function() {
             expect(window.yaws.socketConnect(function(blob){},{},'{protocol}://{domain}/socket{path}')).to.have.property('url','ws://localhost/socket/ex');
           });
         });
-        Websocket = undefined;
-        delete window["Websocket"];
-      });
-      describe('yaws.socketConnect() @ ReconnnectingWebSocket', function() {
-        Websocket = window.getSocketMock("Websocket");
-        ReconnectingWebSocket = window.getSocketMock("ReconnectingWebSocket");
-        it('yaws.socketConnect() should be an object', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
+        describe('yaws.socketConnect() @ ReconnnectingWebSocket', function() {
+          ReconnectingWebSocket = window.getSocketMock("ReconnectingWebSocket");
+          it('yaws.socketConnect() should be an object', function() {
+            window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
+          });
+          it('yaws.socketConnect() should be a ReconnectingWebSocket', function() {
+            window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(ReconnectingWebSocket);
+          });
+          delete window["ReconnectingWebSocket"];
         });
-        it('yaws.socketConnect() should be a ReconnectingWebSocket', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(ReconnectingWebSocket);
+        describe('yaws.socketConnect() @ RobustWebSocket', function() {
+          RobustWebSocket = window.getSocketMock("RobustWebSocket");
+          it('yaws.socketConnect() should be an object', function() {
+            window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
+          });
+          it('yaws.socketConnect() should be a RobustWebSocket', function() {
+            window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(RobustWebSocket);
+          });
+          delete window["RobustWebSocket"];
         });
-        delete window["ReconnectingWebSocket"];
-        ReconnectingWebSocket = undefined;
-        delete window["Websocket"];
-        Websocket = undefined;
-      });
-      describe('yaws.socketConnect() @ RobustWebSocket', function() {
-        Websocket = window.getSocketMock("Websocket");
-        RobustWebSocket = window.getSocketMock("RobustWebSocket");
-        it('yaws.socketConnect() should be an object', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
-        });
-        it('yaws.socketConnect() should be a RobustWebSocket', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(RobustWebSocket);
-        });
-        delete window["RobustWebSocket"];
-        RobustWebSocket = undefined;
-        delete window["Websocket"];
-        Websocket = undefined;
       });
     });
   });
