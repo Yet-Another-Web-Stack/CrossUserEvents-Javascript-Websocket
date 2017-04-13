@@ -18,7 +18,7 @@ describe('yaws.socketConnect', function() {
   });
   //basic socket
   window.Websocket = function(){};
-  Websocket = window.Websocke;
+  Websocket = window.Websocket;
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
   });
