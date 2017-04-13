@@ -61,17 +61,24 @@ describe('yaws', function() {
         it('yaws.socketConnect() should have an onmessage property', function() {
           window.yaws.socketConnect(function(blob){},{},'/').should.have.property("onmessage");
         });
-        it('yaws.socketConnect()  @ Websocket should have an opt1 property', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt1");
+        describe('yaws.socketConnect().opt1 @ Websocket', function() {
+	      it('yaws.socketConnect() @ Websocket should have an opt1 property', function() {
+	        window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt1");
+	      });
+	      it('yaws.socketConnect().opt1 @ Websocket should be array', function() {
+	        window.yaws.socketConnect(function(blob){},{},'/').opt1.should.be.instanceof(Array);
+	      });
+	      it('yaws.socketConnect().opt1 @ Websocket should have no content', function() {
+	        window.yaws.socketConnect(function(blob){},{},'/').opt1.should.have.lengthOf(0);
+	      });
         });
-        it('yaws.socketConnect().opt1  @ Websocket should be array', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').opt1.should.be.instanceof(Array);
-        });
-        it('yaws.socketConnect().opt1  @ Websocket should have no content', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').opt1.should.have.lengthOf(0);
-        });
-        it('yaws.socketConnect()  @ Websocket should not have an opt2 property', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.not.have.property("opt2");
+        describe('yaws.socketConnect().opt2 @ Websocket', function() {
+	      it('yaws.socketConnect() @ Websocket should have an opt2 property', function() {
+	        window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt2");
+	      });
+	      it('yaws.socketConnect().opt1 @ Websocket should be null or undefined', function() {
+	        expect(window.yaws.socketConnect(function(blob){},{},'/').opt2).not.to.exist;
+	      });
         });
         describe('yaws.socketConnect().getUrl() @ Websocket', function() {
           it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
@@ -143,6 +150,39 @@ describe('yaws', function() {
           it('yaws.socketConnect() should be a ReconnectingWebSocket', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(ReconnectingWebSocket);
           });
+	      describe('yaws.socketConnect().opt1 @ ReconnectingWebSocket', function() {
+		    it('yaws.socketConnect() @ ReconnectingWebSocket should have an opt1 property', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt1");
+		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should be array', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt1.should.be.instanceof(Array);
+		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should have no content', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt1.should.have.lengthOf(0);
+		    });
+	      });
+	      describe('yaws.socketConnect().opt2 @ ReconnectingWebSocket', function() {
+		    it('yaws.socketConnect() @ ReconnectingWebSocket should have an opt2 property', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt2");
+		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should be an object', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.should.be.a("object");
+		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should match defaults', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.should.be.eql({
+                    maxReconnectInterval: 60000,
+                    reconnectDecay: 2.5,
+                    timeoutInterval: 5000
+                });
+		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should match config', function() {
+		      window.yaws.socketConnect(function(blob){},{timeout:6000,maxInterval:45000},'/').opt2.should.be.eql({
+                    maxReconnectInterval: 45000,
+                    reconnectDecay: 2.5,
+                    timeoutInterval: 6000
+                });
+		    });
+	      });
         });
         describe('yaws.socketConnect() @ RobustWebSocket', function() {
           beforeEach(function() {
@@ -157,6 +197,49 @@ describe('yaws', function() {
           it('yaws.socketConnect() should be a RobustWebSocket', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(RobustWebSocket);
           });
+	      describe('yaws.socketConnect().opt1 @ RobustWebSocket', function() {
+		    it('yaws.socketConnect() @ RobustWebSocket should have an opt1 property', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt1");
+		    });
+		    it('yaws.socketConnect().opt1 @ RobustWebSocket should be array', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt1.should.be.instanceof(Array);
+		    });
+		    it('yaws.socketConnect().opt1 @ RobustWebSocket should have no content', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt1.should.have.lengthOf(0);
+		    });
+	      });
+	      describe('yaws.socketConnect().opt2 @ RobustWebSocket', function() {
+		    it('yaws.socketConnect() @ RobustWebSocket should have an opt2 property', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt2");
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should be an object', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.should.be.a("object");
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have shouldReconnect', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.have.property('shouldReconnect');
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have shouldReconnect function', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect.should.be.a('function');
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have timeout', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.have.property('timeout');
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have timeout equal default', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').opt2.timeout.should.be.equal(5000);
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have timeout equal config', function() {
+		      window.yaws.socketConnect(function(blob){},{timeout:6000},'/').opt2.timeout.should.be.equal(6000);
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have maxInterval', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').have.property('maxInterval');
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have maxInterval equal default', function() {
+		      window.yaws.socketConnect(function(blob){},{},'/').maxInterval.should.be.equal(60000);
+		    });
+		    it('yaws.socketConnect().opt2 @ RobustWebSocket should have maxInterval equal config', function() {
+		      window.yaws.socketConnect(function(blob){},{maxInterval:66000},'/').maxInterval.should.be.equal(66000);
+		    });
+	      });
         });
       });
     });
