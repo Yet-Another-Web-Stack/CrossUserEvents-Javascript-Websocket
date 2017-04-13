@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 require('fake-dom');
 describe('yaws.socketConnect', function() {
   window.location={
-    href: window.location.href,
+    href: "https://127.0.0.1/example",
     protocol: "http",
     path: "/ex",
     domainname: "localhost"
@@ -40,13 +40,13 @@ describe('yaws.socketConnect', function() {
     };
     expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','wss://127.0.0.1/example');
   });
-  it('yaws.socketConnect().url should be ws://localhost/ex', function() {
-    window.location={
+  window.location={
       href: window.location.href,
       protocol: "http",
       path: "/ex",
       domainname: "localhost"
     };
+  it('yaws.socketConnect().url should be ws://localhost/ex', function() {
     expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','ws://localhost/ex');
   });
   it('yaws.socketConnect().url should be ws://localhost/socket/ex', function() {
