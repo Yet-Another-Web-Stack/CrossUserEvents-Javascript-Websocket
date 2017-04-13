@@ -82,11 +82,11 @@ describe('yaws', function() {
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o object given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:"-",target:socket})).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
+            expect(function{socket.onmessage({data:"-",target:socket})}).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o Blob given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:{},target:socket})).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
+            expect(function(){socket.onmessage({data:{},target:socket})}).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should be able to handle a blob', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
@@ -95,7 +95,7 @@ describe('yaws', function() {
           });
           it('yaws.socketConnect().onmessage() should not be able to handle an ArrayBuffer', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:new ArrayBuffer(1),target:socket})).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
+            expect(function(){socket.onmessage({data:new ArrayBuffer(1),target:socket})}).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer with a FileReader', function() {
             FileReader = require('filereader');
