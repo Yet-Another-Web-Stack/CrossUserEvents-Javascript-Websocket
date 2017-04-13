@@ -244,20 +244,20 @@ describe('yaws', function() {
 			    window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect.should.be.a("function");
 			  });
 			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return null for code 1008', function() {
-			    window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect({code:1008}).should.be.null;
+			    expect(window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect({code:1008})).to.be.null;
 			  });
 			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return null for code 1011', function() {
-			    window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect({code:1011}).should.be.null;
+			    expect(window.yaws.socketConnect(function(blob){},{},'/').opt2.shouldReconnect({code:1011})).to.be.null;
 			  });
 			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return default for attemp 1,000,000', function() {
 			  	var socket = window.yaws.socketConnect(function(blob){},{},'/');
 			  	socket.attemps = 1000000;
-			  	socket.opt2.shouldReconnect({code:1000}).should.be.equal(60000);
+			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(60000);
 			  });
 			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return default for attemp 1,000,000', function() {
 			  	var socket = window.yaws.socketConnect(function(blob){},{},'/');
 			  	socket.attemps = 0;
-			  	socket.opt2.shouldReconnect({code:1000}).should.be.equal(0);
+			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(0);
 			  });
 		    });
 	      });
