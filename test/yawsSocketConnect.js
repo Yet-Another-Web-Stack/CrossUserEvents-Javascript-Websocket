@@ -61,14 +61,17 @@ describe('yaws', function() {
         it('yaws.socketConnect() should have an onmessage property', function() {
           window.yaws.socketConnect(function(blob){},{},'/').should.have.property("onmessage");
         });
-        it('yaws.socketConnect() should have an prop1 property', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').should.have.property("prop1");
+        it('yaws.socketConnect()  @ Websocket should have an opt1 property', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').should.have.property("opt1");
         });
-        it('yaws.socketConnect().prop1 should be array', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').prop1.should.be.instanceof(Array);
+        it('yaws.socketConnect().opt1  @ Websocket should be array', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').opt1.should.be.instanceof(Array);
         });
-        it('yaws.socketConnect().prop1 should have no content', function() {
-          window.yaws.socketConnect(function(blob){},{},'/').prop1.should.have.lengthOf(0);
+        it('yaws.socketConnect().opt1  @ Websocket should have no content', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').opt1.should.have.lengthOf(0);
+        });
+        it('yaws.socketConnect()  @ Websocket should not have an opt2 property', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').should.not.have.property("opt2");
         });
         describe('yaws.socketConnect().getUrl() @ Websocket', function() {
           it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
