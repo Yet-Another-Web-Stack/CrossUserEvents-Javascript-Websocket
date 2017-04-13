@@ -70,7 +70,7 @@
                     }
                     var location={
                         protocol: "ws"+(window.location.href.match(/^https:\/\//i)?"s":""),
-                        path: window.location.href.replace(/^https?:\/\/(.*?)(\?.*?)?(#.*?)?/i,"$1"),
+                        path: window.location.href.replace(/^https?:\/\/(.*?)(\?.*?)?(#.*?)?$/i,"$1"),
                         domain: ""
                     };
                     location.domain = location.path.replace(/\/.*/,"").replace(/:.*/,"");
