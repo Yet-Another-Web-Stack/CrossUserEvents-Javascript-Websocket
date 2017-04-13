@@ -182,6 +182,13 @@ describe('yaws', function() {
                     timeoutInterval: 6000
                 });
 		    });
+		    it('yaws.socketConnect().opt1 @ ReconnectingWebSocket should match adjusted config', function() {
+		      window.yaws.socketConnect(function(blob){},{timeout:0.6,maxInterval:0.45},'/').opt2.should.be.eql({
+                    maxReconnectInterval: 450,
+                    reconnectDecay: 2.5,
+                    timeoutInterval: 600
+                });
+		    });
 	      });
         });
         describe('yaws.socketConnect() @ RobustWebSocket', function() {
@@ -254,7 +261,12 @@ describe('yaws', function() {
 			  	socket.attemps = 1000000;
 			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(60000);
 			  });
-			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return default for attemp 1,000,000', function() {
+			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return a value between 0 and max for attemp 1', function() {
+			  	var socket = window.yaws.socketConnect(function(blob){},{},'/');
+			  	socket.attemps = 1;
+			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.within(1,1000);
+			  });
+			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return default for attemp 0', function() {
 			  	var socket = window.yaws.socketConnect(function(blob){},{},'/');
 			  	socket.attemps = 0;
 			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(0);
