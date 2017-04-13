@@ -30,7 +30,7 @@ describe('yaws.socketConnect', function() {
   });
   //check both getURL-options
   it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
-    expect(window.yaws.socketConnect(function(blob){},{},'/')).to.have.property('url','wss://127.0.0.1/example');
+    expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','wss://127.0.0.1/example');
   });
   window.location={
     href: window.location.href,
@@ -39,7 +39,10 @@ describe('yaws.socketConnect', function() {
     domainname: "localhost"
   };
   it('yaws.socketConnect().url should be ws://localhost/ex', function() {
-    expect(window.yaws.socketConnect(function(blob){},{},'/')).to.have.property('url','ws://localhost/ex');
+    expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','ws://localhost/ex');
+  });
+  it('yaws.socketConnect().url should be ws://localhost/ex', function() {
+    expect(window.yaws.socketConnect(function(blob){},{},'{protocol}://{domain}/socket{path}')).to.have.property('url','ws://localhost/socket/ex');
   });
   //reconnecting socket
   window.ReconnectingWebSocket = window.Websocket;
