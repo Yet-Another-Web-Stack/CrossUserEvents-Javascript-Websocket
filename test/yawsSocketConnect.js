@@ -2,6 +2,7 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 require('fake-dom');
 describe('yaws.socketConnect', function() {
+  window = {};
   window.location={
     href: "https://127.0.0.1/example",
     protocol: "http",
