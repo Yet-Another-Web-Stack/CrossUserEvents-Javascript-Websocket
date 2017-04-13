@@ -95,7 +95,8 @@ describe('yaws', function() {
             window.success.should.equal(new Blob(['a']));
           });
           it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer with a FileReader', function() {
-            var fileReader = require('filereader');
+            var FileReader = require('filereader');
+            var fileReader = new FileReader();
             fileReader.readAsArrayBuffer(new Blob(['a']));
             var socket = window.yaws.socketConnect(onMessageHandler,{});
             socket.onmessage({data:fileReader.result,target:socket});
