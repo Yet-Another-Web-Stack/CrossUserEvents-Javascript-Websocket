@@ -17,7 +17,10 @@ describe('yaws.socketConnect', function() {
     expect(function(){window.yaws.socketConnect(function(blob){},{},'/')}).to.throw("No Websocket Implementation found");
   });
   //basic socket
-  window.Websocket = function(){};
+  window.Websocket = function(url){
+    this.url=url;
+    return this;
+  };
   Websocket = window.Websocket;
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
@@ -25,8 +28,21 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect() should be a Websocket', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(Websocket);
   });
+  //check both getURL-options
+  it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
+    window.yaws.socketConnect(function(blob){},{},'/').property('url','wss://127.0.0.1/example');
+  });
+  window.location={
+    href: window.location.href,
+    protocol: "http",
+    path: "/ex",
+    domainname: "localhost"
+  };
+  it('yaws.socketConnect().url should be ws://localhost/ex', function() {
+    window.yaws.socketConnect(function(blob){},{},'/').property('url','ws://localhost/ex');
+  });
   //reconnecting socket
-  window.ReconnectingWebSocket = function(){};
+  window.ReconnectingWebSocket = window.Websocket;
   ReconnectingWebSocket = window.ReconnectingWebSocket;
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
@@ -35,7 +51,7 @@ describe('yaws.socketConnect', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(ReconnectingWebSocket);
   });
   //robust socket
-  window.RobustWebSocket = function(){};
+  window.RobustWebSocket = window.Websocket;
   RobustWebSocket = window.RobustWebSocket;
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
