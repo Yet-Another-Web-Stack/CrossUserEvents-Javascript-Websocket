@@ -2,7 +2,12 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 require('fake-dom');
 describe('yaws.socketConnect', function() {
-  window={location:{href:"https://127.0.0.1/example"}};
+  window.location={
+    href: window.location.href,
+    protocol: "http",
+    path: "/ex",
+    domainname: "localhost"
+  };
   require('../src/yawsSocketConnect.js');
   it('yaws should be an object', function() {
     window.yaws.should.be.a('object');
@@ -28,20 +33,23 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect() should be a Websocket', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(Websocket);
   });
-  //check both getURL-options
+  //check all getURL-options
   it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
+    window.location={
+      href: window.location.href
+    };
     expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','wss://127.0.0.1/example');
   });
-  window.location={
-    href: window.location.href,
-    protocol: "http",
-    path: "/ex",
-    domainname: "localhost"
-  };
   it('yaws.socketConnect().url should be ws://localhost/ex', function() {
+    window.location={
+      href: window.location.href,
+      protocol: "http",
+      path: "/ex",
+      domainname: "localhost"
+    };
     expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','ws://localhost/ex');
   });
-  it('yaws.socketConnect().url should be ws://localhost/ex', function() {
+  it('yaws.socketConnect().url should be ws://localhost/socket/ex', function() {
     expect(window.yaws.socketConnect(function(blob){},{},'{protocol}://{domain}/socket{path}')).to.have.property('url','ws://localhost/socket/ex');
   });
   //reconnecting socket
