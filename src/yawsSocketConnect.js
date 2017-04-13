@@ -88,7 +88,11 @@
                         if (event.code === 1008 || event.code === 1011) {
                             return null;
                         }
-                        return Math.min(Math.pow(1.05, (ws.attempts + 2) * ws.attempts / 2) * 500, ws.maxInterval);
+                        var calculated = Math.pow(1.05, (ws.attempts + 2) * ws.attempts / 2) * 500;
+                        if(Number.isNaN(calculated) || caluculated === Infinity) {
+                            return ws.maxInterval;
+                        }
+                        return Math.min(calculated , ws.maxInterval);
                     }
                 });
                 ws.maxInterval = getValue(options, "maxInterval");
