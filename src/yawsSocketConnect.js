@@ -89,15 +89,7 @@
                             return null;
                         }
                         var calculated = Math.pow(1.05, (ws.attempts + 2) * ws.attempts / 2) * 500;
-                        console.log(calculated);
-                        console.log(Number.isNaN(calculated));
-                        console.log(calculated === Infinity);
-                        console.log(calculated < ws.maxInterval);
-                        console.log(ws.maxInterval);
-                        if(Number.isNaN(calculated) || calculated === Infinity) {
-                            return ws.maxInterval;
-                        }
-                        return Math.min(calculated , ws.maxInterval);
+                        return Number.isNaN(calculated) || calculated === Infinity || ws.maxInterval < calculated ? ws.maxInterval : calculated;
                     }
                 });
                 ws.maxInterval = getValue(options, "maxInterval");
