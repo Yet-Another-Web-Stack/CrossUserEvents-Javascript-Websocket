@@ -84,6 +84,7 @@ describe('yaws', function() {
           });
           delete window["RobustWebSocket"];
         });
+        delete window["Websocket"];
       });
     });
   });
