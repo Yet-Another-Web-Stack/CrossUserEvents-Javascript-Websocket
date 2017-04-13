@@ -10,6 +10,6 @@ describe('yaws.socketConnect', function() {
     window.yaws.socketConnect.should.be.a('function');
   });
   it('yaws.socketConnect() should be an object', function() {
-    window.yaws.socketConnect().should.be.a('object');
+    window.yaws.socketConnect({},function(blob){},'/').should.be.a('object');
   });
 });
