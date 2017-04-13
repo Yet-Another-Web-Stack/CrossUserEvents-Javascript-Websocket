@@ -45,7 +45,7 @@ describe('yaws', function() {
       });
       describe('yaws.socketConnect() @ Websocket', function() {
         beforeEach(function() {
-          WebSocket = window.getSocketMock("Websocket");
+          Websocket = window.getSocketMock("Websocket");
         });
         afterEach(function() {
           delete window["Websocket"]
