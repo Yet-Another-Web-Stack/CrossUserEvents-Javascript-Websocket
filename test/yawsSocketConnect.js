@@ -128,14 +128,14 @@ describe('yaws', function() {
             socket.onmessage({data:new Blob(['a']),target:socket});
             window.success.should.eql(new Blob(['a']));
           });
-          /*it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer', function() {
-            var FileReader = require('filereader');
-            var fileReader = new FileReader();
-            fileReader.readAsArrayBuffer(new Blob(['a']));
+          it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer', function() {
+			var buf = new ArrayBuffer(2);
+			var bufView = new Uint16Array(buf);
+			bufView[0] = "a".charCodeAt(0);
             var socket = window.yaws.socketConnect(onMessageHandler,{});
-            socket.onmessage({data:fileReader.result,target:socket});
+            socket.onmessage({data:buf,target:socket});
             window.success.should.eql(new Blob(['a']));
-          });*/
+          });
         });
         describe('yaws.socketConnect() @ ReconnnectingWebSocket', function() {
           beforeEach(function() {
@@ -266,10 +266,10 @@ describe('yaws', function() {
 			  	socket.attempts = 1;
 			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.within(1,10000);
 			  });
-			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return 0 for attemp 0', function() {
+			  it('yaws.socketConnect().opt2.shouldReconnect @ RobustWebSocket should return 500 for attemp 0', function() {
 			  	var socket = window.yaws.socketConnect(function(blob){},{},'/');
 			  	socket.attempts = 0;
-			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(0);
+			  	socket.opt2.shouldReconnect({code:1000},socket).should.be.equal(500);
 			  });
 		    });
 	      });
