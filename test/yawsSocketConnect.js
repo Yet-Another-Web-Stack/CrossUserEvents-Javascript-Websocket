@@ -44,7 +44,12 @@ describe('yaws', function() {
         expect(function(){window.yaws.socketConnect(function(blob){},{},'/')}).to.throw("No Websocket Implementation found");
       });
       describe('yaws.socketConnect() @ Websocket', function() {
-        Websocket = window.getSocketMock("Websocket");
+        beforeEach(function() {
+          ReconnectingWebSocket = window.getSocketMock("Websocket");
+        });
+        afterEach(function() {
+          delete window["Websocket"]
+        });
         it('yaws.socketConnect() should be an object', function() {
           window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
         });
@@ -65,26 +70,33 @@ describe('yaws', function() {
           });
         });
         describe('yaws.socketConnect() @ ReconnnectingWebSocket', function() {
-          ReconnectingWebSocket = window.getSocketMock("ReconnectingWebSocket");
+          beforeEach(function() {
+            ReconnectingWebSocket = window.getSocketMock("ReconnectingWebSocket");
+          });
+          afterEach(function() {
+            delete window["ReconnectingWebSocket"]
+          });
           it('yaws.socketConnect() should be an object', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
           });
           it('yaws.socketConnect() should be a ReconnectingWebSocket', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(ReconnectingWebSocket);
           });
-          delete window["ReconnectingWebSocket"];
         });
         describe('yaws.socketConnect() @ RobustWebSocket', function() {
-          RobustWebSocket = window.getSocketMock("RobustWebSocket");
+          beforeEach(function() {
+            RobustWebSocket = window.getSocketMock("RobustWebSocket");
+          });
+          afterEach(function() {
+            delete window["RobustWebSocket"]
+          });
           it('yaws.socketConnect() should be an object', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
           });
           it('yaws.socketConnect() should be a RobustWebSocket', function() {
             window.yaws.socketConnect(function(blob){},{},'/').should.be.instanceof(RobustWebSocket);
           });
-          delete window["RobustWebSocket"];
         });
-        delete window["Websocket"];
       });
     });
   });
