@@ -1,0 +1,13 @@
+language: node_js
+node_js: "node"
+git:
+  depth: 3
+before_script:
+  - npm install chai
+  - npm install -g mocha
+  - npm install -g istanbul
+  - npm install --save fake-dom
+  - ln -s scripts src
+script:
+  - istanbul cover _mocha -- -R spec
+  - istanbul check-coverage --statement 100 --branch 100 --function 100 --lines 100
