@@ -113,40 +113,17 @@
          * @returns {Function}
          */
         var getOnMessage = function () {
-            if ("FileReader" in window) {
-                /**
-                 * handles the Blob or ArrayBuffer returned by the socket
-                 * @param {Event} event
-                 * @returns {undefined}
-                 */
-                return function (event) {
-                    if (typeof event.data !== "object") {
-                        throw new Error("Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.");
-                    }
-                    if (event.data instanceof Blob) {
-                        event.target.onMessageHandler(event.data);
-                        return;
-                    }
-                    if (event.data instanceof ArrayBuffer) {
-                        var reader = new FileReader();
-                        reader.onLoadHandler = event.target.onMessageHandler;
-                        reader.onload = function (event) {
-                            event.target.onLoadHandler(event.target.result);
-                        };
-                        reader.readAsArrayBuffer(event.data);
-                        return;
-                    }
-                    throw new Error("Got an object of a type that shouldn't be returned by the socket.");
-                };
-            }
             /**
-             * handles the Blob returned by the socket
+             * handles the Blob or ArrayBuffer returned by the socket
              * @param {Event} event
              * @returns {undefined}
              */
             return function (event) {
                 if (typeof event.data !== "object") {
                     throw new Error("Got something (" + (typeof event.data) + ") that shouldn't be returned by the socket.");
+                }
+                if (event.data instanceof ArrayBuffer) {
+                    event.data = new Blob([event.data]);
                 }
                 if (event.data instanceof Blob) {
                     event.target.onMessageHandler(event.data);
