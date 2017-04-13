@@ -9,7 +9,10 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect should be a function', function() {
     window.yaws.socketConnect.should.be.a('function');
   });
+  it('yaws.socketConnect() should throw an error on missing argument', function() {
+    expect(window.yaws.socketConnect).to.throw(Error);
+  });
   it('yaws.socketConnect() should be an object', function() {
-    window.yaws.socketConnect({},function(blob){},'/').should.be.a('object');
+    window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
   });
 });
