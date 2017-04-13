@@ -92,15 +92,15 @@ describe('yaws', function() {
           it('yaws.socketConnect().onmessage() should be able to handle a blob', function() {
             var socket = window.yaws.socketConnect(onMessageHandler,{});
             socket.onmessage({data:new Blob(['a']),target:socket});
-            window.success.should.equal(new Blob(['a']));
+            window.success.should.eql(new Blob(['a']));
           });
-          it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer with a FileReader', function() {
+          it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer', function() {
             var FileReader = require('filereader');
             var fileReader = new FileReader();
             fileReader.readAsArrayBuffer(new Blob(['a']));
             var socket = window.yaws.socketConnect(onMessageHandler,{});
             socket.onmessage({data:fileReader.result,target:socket});
-            window.success.should.equal(new Blob(['a']));
+            window.success.should.eql(new Blob(['a']));
           });
         });
         describe('yaws.socketConnect() @ ReconnnectingWebSocket', function() {
