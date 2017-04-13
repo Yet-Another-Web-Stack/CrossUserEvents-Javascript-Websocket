@@ -15,8 +15,10 @@ window = {
     }
   },
   getSocketMock: function(name) {
-    window[name] = function(url){
+    window[name] = function(url,opt1,opt2){
       this.url=url;
+      this.opt1 = opt1;
+      this.opt2 = opt2;
       return this;
     };
     return window[name];
@@ -58,6 +60,15 @@ describe('yaws', function() {
         });
         it('yaws.socketConnect() should have an onmessage property', function() {
           window.yaws.socketConnect(function(blob){},{},'/').should.have.property("onmessage");
+        });
+        it('yaws.socketConnect() should have an prop1 property', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').should.have.property("prop1");
+        });
+        it('yaws.socketConnect().prop1 should be array', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').prop1.should.be.instanceof(Array);
+        });
+        it('yaws.socketConnect().prop1 should have no content', function() {
+          window.yaws.socketConnect(function(blob){},{},'/').prop1.should.have.lengthOf(0);
         });
         describe('yaws.socketConnect().getUrl() @ Websocket', function() {
           it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
