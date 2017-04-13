@@ -4,10 +4,7 @@ require('fake-dom');
 describe('yaws.socketConnect', function() {
   window = {};
   window.location={
-    href: "https://127.0.0.1/example",
-    protocol: "http",
-    path: "/ex",
-    domainname: "localhost"
+    href: "https://127.0.0.1/example"
   };
   require('../src/yawsSocketConnect.js');
   it('yaws should be an object', function() {
@@ -36,9 +33,6 @@ describe('yaws.socketConnect', function() {
   });
   //check all getURL-options
   it('yaws.socketConnect().url should be wss://127.0.0.1/example', function() {
-    window.location={
-      href: window.location.href
-    };
     expect(window.yaws.socketConnect(function(blob){},{})).to.have.property('url','wss://127.0.0.1/example');
   });
   window.location={
