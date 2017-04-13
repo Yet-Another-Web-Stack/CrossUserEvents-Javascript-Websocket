@@ -38,10 +38,10 @@ describe('yaws', function() {
     });
     describe('yaws.socketConnect()', function() {
       it('yaws.socketConnect() should throw an error on missing argument', function() {
-        expect(window.yaws.socketConnect).to.throw("The first parameter 'onMessage' is required to be a function accepting a single parameter of type Blob.");
+        expect(window.yaws.socketConnect).to.throw(Error, "The first parameter 'onMessage' is required to be a function accepting a single parameter of type Blob.");
       });
       it('yaws.socketConnect() should throw an error on missing Websocket', function() {
-        expect(function(){window.yaws.socketConnect(function(blob){},{},'/')}).to.throw("No Websocket Implementation found");
+        expect(function(){window.yaws.socketConnect(function(blob){},{},'/')}).to.throw(Error, "No Websocket Implementation found");
       });
       describe('yaws.socketConnect() @ Websocket', function() {
         beforeEach(function() {
@@ -73,40 +73,35 @@ describe('yaws', function() {
           });
         });
         describe('yaws.socketConnect().onmessage() @ Websocket', function() {
+          beforeEach(function(){
+            window.success = false;
+          });
           it('yaws.socketConnect().onmessage should be a function', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
             expect(socket.onmessage).to.be.a('function');
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o object given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:"-",target:socket})).to.throw("Got something (string) that shouldn't be returned by the socket.");
+            expect(socket.onmessage({data:"-",target:socket})).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should throw an exception w/o Blob given', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:{},target:socket})).to.throw("Got an object of a type that shouldn't be returned by the socket.");
-          });
-          it('yaws.socketConnect().onmessage() should be able to handle a blob', function() {
-            var socket = window.yaws.socketConnect(function(blob){},{});
-            socket.onmessage({data:new Blob(['a']),target:socket});
-            window.success.should.equal('a');
-            delete window["success"];
+            expect(socket.onmessage({data:{},target:socket})).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should be able to handle a blob', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
             socket.onmessage({data:new Blob(['a']),target:socket});
             window.success.should.equal(new Blob(['a']));
-            delete window["success"];
           });
           it('yaws.socketConnect().onmessage() should not be able to handle an ArrayBuffer', function() {
             var socket = window.yaws.socketConnect(function(blob){},{});
-            expect(socket.onmessage({data:new ArrayBuffer(1),target:socket})).to.throw("Got an object of a type that shouldn't be returned by the socket.");
+            expect(socket.onmessage({data:new ArrayBuffer(1),target:socket})).to.throw(Error, "Got an object of a type that shouldn't be returned by the socket.");
           });
           it('yaws.socketConnect().onmessage() should be able to handle an ArrayBuffer with a FileReader', function() {
             FileReader = require('filereader');
             var socket = window.yaws.socketConnect(function(blob){},{});
             socket.onmessage({data:new ArrayBuffer(1),target:socket});
             window.success.should.eventually.equal(new Blob(['0']));
-            delete window["success"];
             FileReader = undefined;
           });
         });
