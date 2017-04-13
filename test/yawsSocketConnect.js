@@ -22,8 +22,8 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
   });
-  it('yaws.socketConnect() should be an object', function() {
-    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(window.Websocket);
+  it('yaws.socketConnect() should be a Websocket', function() {
+    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(Websocket);
   });
   //reconnecting socket
   window.ReconnectingWebSocket = function(){};
@@ -31,8 +31,8 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
   });
-  it('yaws.socketConnect() should be an object', function() {
-    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(window.ReconnectingWebSocket);
+  it('yaws.socketConnect() should be a ReconnectingWebSocket', function() {
+    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(ReconnectingWebSocket);
   });
   //robust socket
   window.RobustWebSocket = function(){};
@@ -40,7 +40,7 @@ describe('yaws.socketConnect', function() {
   it('yaws.socketConnect() should be an object', function() {
     window.yaws.socketConnect(function(blob){},{},'/').should.be.a('object');
   });
-  it('yaws.socketConnect() should be an object', function() {
-    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(window.RobustWebSocket);
+  it('yaws.socketConnect() should be a RobustWebSocket', function() {
+    window.yaws.socketConnect(function(blob){},{},'/').should.be.a(RobustWebSocket);
   });
 });
