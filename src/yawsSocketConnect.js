@@ -156,7 +156,7 @@
             };
         };
         if (typeof onMessage !== "function") {
-            throw "The second parameter onMessage is required to be a function accepting a single parameter of type Blob.";
+            throw "The first parameter 'onMessage' is required to be a function accepting a single parameter of type Blob.";
         }
         var Socket = getSocket(url, options);
         Socket.onMessageHandler = onMessage;
