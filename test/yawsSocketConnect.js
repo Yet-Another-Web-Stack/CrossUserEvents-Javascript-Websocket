@@ -81,6 +81,19 @@ describe('yaws', function() {
             var socket = window.yaws.socketConnect(onMessageHandler,{});
             expect(socket.onmessage).to.be.a('function');
           });
+          it('yaws.socketConnect().onMessageHandler should be a function', function() {
+            var socket = window.yaws.socketConnect(onMessageHandler,{});
+            expect(socket.onMessageHandler).to.be.a('function');
+          });
+          it('yaws.socketConnect().onMessageHandler should be expected function', function() {
+            var socket = window.yaws.socketConnect(onMessageHandler,{});
+            expect(socket.onMessageHandler).to.be.eql(onMessageHandler);
+          });
+          it('yaws.socketConnect().onMessageHandler should be expected function', function() {
+            var socket = window.yaws.socketConnect(onMessageHandler,{});
+            socket.onMessageHandler(new Blob(['a']));
+            window.success.should.eql(new Blob(['a']));
+          });
           it('yaws.socketConnect().onmessage() should throw an exception w/o object given', function() {
             var socket = window.yaws.socketConnect(onMessageHandler,{});
             expect(function(){socket.onmessage({data:"-",target:socket})}).to.throw(Error, "Got something (string) that shouldn't be returned by the socket.");
