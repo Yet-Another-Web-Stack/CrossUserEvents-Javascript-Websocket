@@ -7,6 +7,7 @@ before_script:
   - npm install -g mocha
   - npm install -g istanbul
   - npm install --save fake-dom
+  - npm install -g filereader
   - ln -s scripts src
 script:
   - istanbul cover _mocha -- -R spec
