@@ -40,10 +40,7 @@
                     maxInterval: 60000
                 };
                 if (!canUseProperty(options, key)) {
-                    if (key in defaults) {
-                        return defaults[key];
-                    }
-                    throw new Error("No default defined for " + key + ".");
+                    return defaults[key];
                 }
                 if (parseInt(options[key], 10) !== options[key]) {
                     return parseInt(options[key] * 1000, 10);
